@@ -1,0 +1,1 @@
+# Spotiscan - Python package initialization
