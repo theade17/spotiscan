@@ -1,0 +1,4 @@
+Track URI,Track Name,Album Name,Artist Name(s),Release Date,Duration (ms),Popularity,Explicit,Added By,Added At,Genres,Record Label,Danceability,Energy,Key,Loudness,Mode,Speechiness,Acousticness,Instrumentalness,Liveness,Valence,Tempo,Time Signature
+spotify:track:0dLHKyTZHhtGY4ZxnR8bZL,"Stealing Cars","Fast Food","Nadine Shah",2015-04-06,242555,31,false,5forty,2020-06-30T14:21:00Z,"art rock","Apollo",0.375,0.615,2,-6.14,1,0.0295,0.0000835,0.769,0.115,0.165,90.331,4
+spotify:track:1FNvsOtp6bnSOQTBgJOtha,"Falcons","Docks","Amanda Bergman",2016-02-26,234013,0,false,5forty,2020-06-30T14:22:59Z,"swedish pop","INGRID",0.526,0.646,7,-9.939,1,0.0324,0.65,0.0232,0.0713,0.364,110.044,4
+spotify:track:2aWbVo5B7Y6rrRUqKERTOG,"Animal Fear","We Slept at Last","Marika Hackman",2015-02-16,204470,25,false,5forty,2020-06-30T14:29:06Z,"southern gothic,ambient folk","Dirty Hit",0.537,0.732,0,-7.886,1,0.0315,0.449,0.00658,0.118,0.283,159.973,4

@@ -1,0 +1,4 @@
+Track URI,Track Name,Album Name,Artist Name(s),Release Date,Duration (ms),Popularity,Explicit,Added By,Added At,Genres,Record Label,Danceability,Energy,Key,Loudness,Mode,Speechiness,Acousticness,Instrumentalness,Liveness,Valence,Tempo,Time Signature
+spotify:track:3SiP7gPXW89rY1QIh1hRBp,"Holme Tunnel","1996-1999","Empress",2001,203320,2,false,5forty,2012-10-30T04:12:16Z,"slowcore,lo-fi indie","555 Recordings",0.499,0.0955,9,-12.045,1,0.0588,0.814,0.739,0.104,0.0833,103.272,4
+spotify:track:2gc8uoqthw59u29k2WI2Ve,"Such Thoughts You Hold","1996-1999","Empress",2001,116453,2,false,5forty,2012-10-30T04:12:16Z,"slowcore,lo-fi indie","555 Recordings",0.64,0.159,9,-22.242,1,0.0394,0.875,0.83,0.108,0.0396,78.386,3
+spotify:track:4zK2u1ikh61FJbDuUA5JJf,"All We've Seen - Original Recording","1996-1999","Empress",2001,156493,2,false,5forty,2012-10-30T04:12:16Z,"slowcore,lo-fi indie","555 Recordings",0.662,0.119,0,-12.191,1,0.0409,0.891,0.342,0.149,0.0479,80.935,4

@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spotiscan | Discover Your Library</title>
+    <link rel="icon" href="/favicon.ico">
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #121212;
+            color: #ffffff;
+        }
+
+        /* Spotify Scrollbar */
+        ::-webkit-scrollbar {
+            width: 12px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #121212;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #535353;
+            border-radius: 6px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #b3b3b3;
+        }
+
+        .spotify-green {
+            background-color: #1DB954;
+        }
+
+        .spotify-green:hover {
+            background-color: #1ed760;
+        }
+
+        .highlight-row:hover {
+            background-color: #2a2a2a;
+        }
+    </style>
+</head>
+
+<body class="min-h-screen flex flex-col items-center">
+
+    <!-- Header / Nav -->
+    <header
+        class="w-full max-w-6xl px-6 py-6 flex justify-between items-center sticky top-0 bg-[#121212] z-50 bg-opacity-95 backdrop-blur-sm">
+        <div class="flex items-center space-x-3">
+            <div class="bg-[#1DB954] p-2 rounded-lg">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-black" viewBox="0 0 24 24"
+                    fill="currentColor">
+                    <path
+                        d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.494 17.306c-.215.353-.674.464-1.027.249-2.813-1.72-6.353-2.108-10.521-1.154-.404.092-.81-.157-.903-.561-.092-.404.157-.81.561-.903 4.566-1.042 8.473-.6 11.642 1.342.353.214.464.673.248 1.027zm1.468-3.259c-.214.354-.672.464-1.026.249-3.214-1.967-8.109-2.541-11.91-1.385-.453.136-.93-.119-1.066-.572-.136-.453.119-.93.572-1.066 4.343-1.318 9.742-.656 13.404 1.588.354.215.464.673.226 1.086zm.116-3.411C15.084 8.24 8.359 8.018 4.47 9.196c-.6.182-1.25-.157-1.432-.757-.182-.6.157-1.25.757-1.432 4.475-1.353 11.89-1.096 16.58 1.688.54.321.72 1.018.4 1.558-.321.54-1.018.72-1.558.4z" />
+                </svg>
+            </div>
+            <h1 class="text-2xl font-black tracking-tighter">Spotiscan</h1>
+        </div>
+
+        <div class="flex items-center space-x-4">
+            <input type="file" id="csvInput" accept=".csv,.zip" class="hidden" onchange="handleFileSelect()">
+
+            <button onclick="document.getElementById('csvInput').click()"
+                class="bg-[#242424] hover:bg-[#2a2a2a] text-white px-6 py-2 rounded-full font-bold text-sm transition border border-transparent hover:border-gray-600">
+                Choose File
+            </button>
+
+            <div id="fileName" class="text-xs text-gray-400 max-w-[150px] truncate hidden"></div>
+
+            <button id="uploadBtn" onclick="uploadCsv()"
+                class="hidden spotify-green text-black px-6 py-2 rounded-full font-bold text-sm transition transform hover:scale-105">
+                <span id="uploadText">Import CSV</span>
+            </button>
+        </div>
+    </header>
+
+    <main class="w-full max-w-6xl px-6 mt-8 flex-grow pb-20">
+
+        <!-- Search Section -->
+        <div class="relative max-w-md mx-auto mb-12">
+            <!-- Mode Switcher -->
+            <div class="flex justify-center mb-6">
+                <div class="bg-[#242424] p-1 rounded-full flex">
+                    <button id="simpleModeBtn" onclick="setSearchMode('simple')"
+                        class="px-6 py-2 rounded-full font-bold text-sm transition-all duration-200 bg-white text-black">
+                        Simple Search
+                    </button>
+                    <button id="nlModeBtn" onclick="setSearchMode('nl')"
+                        class="px-6 py-2 rounded-full font-bold text-sm transition-all duration-200 text-gray-400 hover:text-white">
+                        Natural Language
+                    </button>
+                </div>
+            </div>
+
+            <div class="relative">
+                <input type="text" id="searchInput"
+                    class="w-full bg-[#242424] text-white rounded-full py-3 pl-12 pr-6 focus:outline-none focus:ring-2 focus:ring-white border border-transparent placeholder-gray-400 font-normal transition-all"
+                    placeholder="What do you want to play?" oninput="debounceSearch()">
+                <div class="absolute left-4 top-3.5 text-gray-400">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                    </svg>
+                </div>
+            </div>
+
+            <!-- User Auth Section -->
+            <div id="userSection" class="flex items-center space-x-4 mb-8 justify-center mt-8">
+                <button id="loginBtn" onclick="location.href='/api/spotify/login'"
+                    class="bg-[#1DB954] hover:bg-[#1ed760] text-black px-6 py-2 rounded-full font-bold text-sm transition">
+                    Connect Spotify
+                </button>
+                <div id="userInfo" class="hidden flex items-center space-x-4">
+                    <span id="userName" class="text-gray-400 text-sm font-medium"></span>
+                    <button onclick="syncSpotify()"
+                        class="bg-[#242424] hover:bg-[#2a2a2a] text-white px-4 py-1.5 rounded-full text-xs font-bold border border-gray-700 transition">
+                        Sync Library
+                    </button>
+                    <button onclick="location.href='/api/spotify/logout'"
+                        class="text-gray-400 hover:text-white text-xs font-bold transition">
+                        Logout
+                    </button>
+                </div>
+            </div>
+
+            <!-- Whole Word Toggle (Only for Simple Mode) -->
+            <div id="wholeWordContainer" class="flex justify-center mt-4">
+                <label class="flex items-center cursor-pointer space-x-3 group">
+                    <input type="checkbox" id="wholeWordToggle" onchange="performNewSearch()" class="sr-only peer">
+                    <div
+                        class="w-9 h-5 bg-gray-600 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-[#1DB954] relative">
+                    </div>
+                    <span class="text-sm font-medium text-gray-400 group-hover:text-white transition">Match Whole Word
+                        Only</span>
+                </label>
+            </div>
+        </div>
+
+        <!-- No Results State -->
+        <div id="emptyState" class="text-center mt-20">
+            <h2 class="text-2xl font-bold mb-2">Find your favorite songs</h2>
+            <p class="text-gray-400 text-sm">Search for titles, artists, or import your own playlists.</p>
+        </div>
+
+        <!-- Results Table -->
+        <div id="resultsTable" class="hidden">
+            <div
+                class="grid grid-cols-12 gap-4 text-gray-400 text-sm border-b border-[#2a2a2a] pb-2 px-4 mb-2 uppercase tracking-wider font-normal">
+                <div class="col-span-1">#</div>
+                <div class="col-span-5">Title</div>
+                <div class="col-span-3 text-center">Actions</div>
+                <div class="col-span-2 text-right">Date Added</div>
+                <div class="col-span-1 text-right">Year</div>
+            </div>
+
+            <div id="tableBody" class="space-y-1">
+                <!-- Rows injected here -->
+            </div>
+
+            <!-- Pagination Controls -->
+            <div id="paginationControls" class="flex items-center justify-center space-x-4 mt-8 hidden">
+                <button id="prevBtn" onclick="prevPage()"
+                    class="bg-[#242424] hover:bg-[#2a2a2a] text-white px-6 py-2 rounded-full font-bold text-sm transition disabled:opacity-30 disabled:cursor-not-allowed">
+                    &lt; Previous
+                </button>
+                <span id="pageIndicator" class="text-sm text-gray-400 font-medium">Page 1</span>
+                <button id="nextBtn" onclick="nextPage()"
+                    class="bg-[#242424] hover:bg-[#2a2a2a] text-white px-6 py-2 rounded-full font-bold text-sm transition disabled:opacity-30 disabled:cursor-not-allowed">
+                    Next &gt;
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <!-- Toast Container -->
+    <div id="toastContainer" class="fixed bottom-8 right-8 z-[100] flex flex-col space-y-3"></div>
+
+    <script>
+        let currentOffset = 0;
+        let limit = 25;
+        let isLoading = false;
+        let hasMore = true;
+        let searchMode = 'simple';
+
+        // Toast Notification System
+        function showToast(message, type = 'success') {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            
+            // Modern designs
+            const bgColor = type === 'success' ? '#1DB954' : type === 'error' ? '#E91429' : '#242424';
+            const textColor = type === 'success' || type === 'error' ? '#000000' : '#FFFFFF';
+            
+            toast.className = `translate-y-10 opacity-0 transform transition-all duration-300 ease-out flex items-center px-6 py-4 rounded-xl shadow-2xl min-w-[300px] border border-white/5 backdrop-blur-md`;
+            toast.style.backgroundColor = bgColor;
+            toast.style.color = textColor;
+            
+            const icon = type === 'success' ? 
+                `<svg class="w-5 h-5 mr-3" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>` : 
+                `<svg class="w-5 h-5 mr-3" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path></svg>`;
+
+            toast.innerHTML = `
+                ${icon}
+                <span class="font-bold text-sm">${message}</span>
+            `;
+
+            container.appendChild(toast);
+
+            // Animate in
+            requestAnimationFrame(() => {
+                toast.classList.remove('translate-y-10', 'opacity-0');
+                toast.classList.add('translate-y-0', 'opacity-100');
+            });
+
+            // Auto-dismiss
+            setTimeout(() => {
+                toast.classList.add('opacity-0', 'translate-x-10');
+                setTimeout(() => toast.remove(), 400);
+            }, 4000);
+        }
+
+        // Aliases for convenience
+        function showSuccess(msg) { showToast(msg, 'success'); }
+        function showError(msg) { showToast(msg, 'error'); }
+
+        function setSearchMode(mode) {
+            if (searchMode === mode) return;
+            searchMode = mode;
+
+            const simpleBtn = document.getElementById('simpleModeBtn');
+            const nlBtn = document.getElementById('nlModeBtn');
+            const input = document.getElementById('searchInput');
+            const wholeWordContainer = document.getElementById('wholeWordContainer');
+
+            if (mode === 'simple') {
+                simpleBtn.classList.add('bg-white', 'text-black');
+                simpleBtn.classList.remove('text-gray-400', 'hover:text-white');
+                nlBtn.classList.remove('bg-white', 'text-black');
+                nlBtn.classList.add('text-gray-400', 'hover:text-white');
+                input.placeholder = "What do you want to play?";
+                wholeWordContainer.classList.remove('hidden');
+            } else {
+                nlBtn.classList.add('bg-white', 'text-black');
+                nlBtn.classList.remove('text-gray-400', 'hover:text-white');
+                simpleBtn.classList.remove('bg-white', 'text-black');
+                simpleBtn.classList.add('text-gray-400', 'hover:text-white');
+                input.placeholder = 'Try "( but not live"';
+                wholeWordContainer.classList.add('hidden');
+            }
+
+            performNewSearch();
+        }
+
+        function handleFileSelect() {
+            const input = document.getElementById('csvInput');
+            const nameDisplay = document.getElementById('fileName');
+            const uploadBtn = document.getElementById('uploadBtn');
+
+            if (input.files.length > 0) {
+                nameDisplay.innerText = input.files[0].name;
+                nameDisplay.classList.remove('hidden');
+                uploadBtn.classList.remove('hidden');
+            } else {
+                nameDisplay.classList.add('hidden');
+                uploadBtn.classList.add('hidden');
+            }
+        }
+
+        async function uploadCsv() {
+            const input = document.getElementById('csvInput');
+            const btn = document.getElementById('uploadBtn');
+            const text = document.getElementById('uploadText');
+
+            if (input.files.length === 0) return;
+
+            const formData = new FormData();
+            formData.append('file', input.files[0]);
+
+            btn.disabled = true;
+            btn.classList.add('opacity-50', 'cursor-not-allowed');
+            text.innerText = "Importing...";
+
+            try {
+                const res = await fetch('/api/upload_csv', {
+                    method: 'POST',
+                    body: formData
+                });
+                const data = await res.json();
+
+                if (data.status === 'success') {
+                    showSuccess(data.message);
+                    input.value = '';
+                    handleFileSelect();
+                } else {
+                    showError(data.message);
+                }
+            } catch (e) {
+                showError("Upload failed: " + e);
+            } finally {
+                btn.disabled = false;
+                btn.classList.remove('opacity-50', 'cursor-not-allowed');
+                text.innerText = "Import CSV";
+            }
+        }
+
+        let timeout = null;
+
+        function debounceSearch() {
+            clearTimeout(timeout);
+            timeout = setTimeout(performNewSearch, 300);
+        }
+
+        async function performNewSearch() {
+            currentOffset = 0;
+            hasMore = true;
+            await performSearch();
+        }
+
+        async function nextPage() {
+            if (hasMore && !isLoading) {
+                currentOffset += limit;
+                await performSearch();
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        }
+
+        async function prevPage() {
+            if (currentOffset > 0 && !isLoading) {
+                currentOffset = Math.max(0, currentOffset - limit);
+                await performSearch();
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        }
+
+        async function performSearch() {
+            if (isLoading) return;
+
+            const query = document.getElementById('searchInput').value;
+            const wholeWord = document.getElementById('wholeWordToggle').checked;
+            const tableBody = document.getElementById('tableBody');
+            const resultsTable = document.getElementById('resultsTable');
+            const emptyState = document.getElementById('emptyState');
+            const paginationControls = document.getElementById('paginationControls');
+
+            if (query.length < 1) {
+                resultsTable.classList.add('hidden');
+                emptyState.classList.remove('hidden');
+                paginationControls.classList.add('hidden');
+                return;
+            }
+
+            isLoading = true;
+            // Disable buttons while loading
+            document.getElementById('prevBtn').disabled = true;
+            document.getElementById('nextBtn').disabled = true;
+
+            try {
+                const url = `/api/search?q=${encodeURIComponent(query)}&whole_word=${wholeWord}&mode=${searchMode}&offset=${currentOffset}&limit=${limit}`;
+                const response = await fetch(url);
+                const data = await response.json();
+
+                if (data.length === 0 && currentOffset === 0) {
+                    tableBody.innerHTML = '<div class="text-center text-gray-400 py-10">No results found for "' + query + '"</div>';
+                    resultsTable.classList.remove('hidden');
+                    emptyState.classList.add('hidden');
+                    paginationControls.classList.add('hidden');
+                    return;
+                }
+
+                resultsTable.classList.remove('hidden');
+                emptyState.classList.add('hidden');
+                paginationControls.classList.remove('hidden');
+
+                tableBody.innerHTML = data.map((song, index) => {
+                    const rowNumber = currentOffset + index + 1;
+                    const searchTerm = encodeURIComponent(`${song.artist} ${song.title}`);
+                    return `
+                    <div class="grid grid-cols-12 gap-4 px-4 py-3 rounded-md highlight-row items-center cursor-default group transition-colors duration-200">
+                        <div class="col-span-1 text-gray-400 text-sm group-hover:text-white">${rowNumber}</div>
+                        <div class="col-span-5 flex flex-col">
+                            <span class="text-white font-medium text-base truncate pr-2" title="${song.title}">${song.title}</span>
+                            <span class="text-gray-400 text-sm truncate group-hover:text-white transition-colors" title="${song.artist}">${song.artist}</span>
+                        </div>
+                        <div class="col-span-3 flex items-center justify-center space-x-3 opacity-0 group-hover:opacity-100 transition-opacity">
+                            <a href="https://open.spotify.com/search/${searchTerm}" target="_blank" title="Search on Spotify" 
+                               class="bg-black/40 hover:bg-[#1DB954] text-white p-2 rounded-full transition-colors">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                    <path d="M8 0a8 8 0 1 0 0 16A8 8 0 0 0 8 0zm3.669 11.538a.498.498 0 0 1-.686.165c-1.879-1.147-4.243-1.407-7.028-.77a.499.499 0 0 1-.222-.973c3.048-.696 5.662-.397 7.77.892a.5.5 0 0 1 .166.686zm.979-2.178a.624.624 0 0 1-.858.205c-2.15-1.321-5.428-1.704-7.972-.932a.625.625 0 0 1-.362-1.194c2.905-.881 6.517-.454 8.986 1.063a.624.624 0 0 1 .206.858zm.084-2.268C10.154 5.56 5.9 5.419 3.438 6.166a.748.748 0 1 1-.434-1.432c2.825-.857 7.523-.692 10.492 1.07a.747.747 0 1 1-.764 1.288z"/>
+                                </svg>
+                            </a>
+                            <a href="https://www.youtube.com/results?search_query=${searchTerm}" target="_blank" title="Search on YouTube"
+                               class="bg-black/40 hover:bg-[#FF0000] text-white p-2 rounded-full transition-colors">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                    <path d="M8.051 1.999h.089c.822.003 4.987.033 6.11.335a2.01 2.01 0 0 1 1.415 1.42c.101.38.172.883.22 1.402l.01.104.022.26.008.104c.065.914.073 1.77.074 1.957v.075c-.001.194-.01 1.108-.082 2.06l-.008.105-.009.104c-.05.572-.124 1.14-.235 1.558a2.007 2.007 0 0 1-1.415 1.42c-1.16.312-5.569.334-6.18.335h-.142c-.309 0-1.587-.006-2.927-.052l-.17-.006-.087-.004-.171-.007-.171-.007c-1.11-.049-2.167-.128-2.654-.26a2.007 2.007 0 0 1-1.415-1.419c-.111-.417-.185-.986-.235-1.558L.09 9.82l-.008-.104A31.4 31.4 0 0 1 0 7.68v-.123c.002-.215.01-.958.064-1.778l.007-.103.003-.052.008-.104.022-.26.01-.104c.048-.519.119-1.023.22-1.402a2.007 2.007 0 0 1 1.415-1.42c.487-.13 1.544-.21 2.654-.26l.17-.007.172-.006.086-.003.171-.007A99.788 99.788 0 0 1 7.858 2h.193zM6.4 5.209v4.818l4.157-2.408L6.4 5.209z"/>
+                                </svg>
+                            </a>
+                        </div>
+                        <div class="col-span-2 text-right text-gray-400 text-sm font-light">Added ${song.source}</div> 
+                        <div class="col-span-1 text-right text-gray-400 text-sm">${song.year || '-'}</div>
+                    </div>
+                `}).join('');
+
+                hasMore = data.length === limit;
+
+                // Update pagination buttons
+                const pageNum = Math.floor(currentOffset / limit) + 1;
+                document.getElementById('pageIndicator').innerText = `Page ${pageNum}`;
+                document.getElementById('prevBtn').disabled = currentOffset === 0;
+                document.getElementById('nextBtn').disabled = !hasMore;
+
+            } catch (e) {
+                console.error(e);
+                tableBody.innerHTML = '<div class="text-red-500 text-center py-10">Error loading results.</div>';
+                paginationControls.classList.add('hidden');
+            } finally {
+                isLoading = false;
+            }
+        }
+        async function checkUser() {
+            try {
+                const res = await fetch('/api/me');
+                const data = await res.json();
+                const loginBtn = document.getElementById('loginBtn');
+                const userInfo = document.getElementById('userInfo');
+                const userName = document.getElementById('userName');
+
+                if (data.logged_in) {
+                    loginBtn.classList.add('hidden');
+                    userInfo.classList.remove('hidden');
+                    userName.textContent = `Connected as ${data.username}`;
+                } else {
+                    loginBtn.classList.remove('hidden');
+                    userInfo.classList.add('hidden');
+                }
+            } catch (e) {
+                console.error("Failed to check user status", e);
+            }
+        }
+
+        async function syncSpotify() {
+            const btn = event.target;
+            const originalText = btn.textContent;
+            btn.textContent = "Syncing...";
+            btn.disabled = true;
+
+            try {
+                const res = await fetch('/api/spotify/sync', { method: 'POST' });
+                const data = await res.json();
+                if (data.status === 'success') {
+                    showSuccess(data.message);
+                    performNewSearch();
+                } else {
+                    showError(data.message);
+                }
+            } catch (e) {
+                showError("Global Error: " + e);
+            } finally {
+                btn.textContent = originalText;
+                btn.disabled = false;
+            }
+        }
+
+        // Initialize user check
+        checkUser();
+    </script>
+</body>
+
+</html>

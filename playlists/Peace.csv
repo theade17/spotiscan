@@ -1,0 +1,6 @@
+Track URI,Track Name,Album Name,Artist Name(s),Release Date,Duration (ms),Popularity,Explicit,Added By,Added At,Genres,Record Label,Danceability,Energy,Key,Loudness,Mode,Speechiness,Acousticness,Instrumentalness,Liveness,Valence,Tempo,Time Signature
+spotify:track:1aB3C7GKpCFgsdhqzfZW0U,"Bloodshake","EP Delicious","Peace",2012-09-07,235586,32,false,5forty,2012-10-14T22:20:38Z,"","Columbia",0.524,0.841,4,-5.039,0,0.0404,0.00246,0.00128,0.289,0.247,128.004,4
+spotify:track:3eweLNgzbNTaovEp0usUqr,"California Daze","EP Delicious","Peace",2012-09-07,236373,19,false,5forty,2012-10-14T22:20:38Z,"","Columbia",0.253,0.385,9,-7.954,1,0.028,0.0899,0.00000641,0.113,0.26,79.175,4
+spotify:track:3el3cGqi4rphbFhAuY5AkA,"Ocean's Eye","EP Delicious","Peace",2012-09-07,141080,13,false,5forty,2012-10-14T22:20:38Z,"","Columbia",0.509,0.816,0,-7.274,1,0.0532,0.00723,0.0000296,0.295,0.193,102.982,4
+spotify:track:5eqzXinSklkN4gId6EQUAR,"1998 (Delicious)","EP Delicious","Peace",2012-09-07,608280,35,false,5forty,2012-10-14T22:20:38Z,"","Columbia",0.47,0.707,1,-7.477,0,0.0419,0.01,0.677,0.37,0.165,122.042,4
+spotify:track:4JVO3ciZSylHhcLINIt9wJ,"Zero BC","Songs Of Yesterday","Peace",2000-01-01,274750,0,false,5forty,2012-10-14T22:20:38Z,"","Universal Music Group",0.409,0.253,2,-15.794,0,0.0349,0.52,0,0.336,0.186,125.663,3

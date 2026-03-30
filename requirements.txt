@@ -1,0 +1,12 @@
+fastapi
+uvicorn[standard]
+gunicorn
+psycopg2-binary
+sqlmodel
+beautifulsoup4
+playwright
+spotipy
+python-dotenv
+httpx
+jinja2
+python-multipart

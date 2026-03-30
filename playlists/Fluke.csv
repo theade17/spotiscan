@@ -1,0 +1,6 @@
+Track URI,Track Name,Album Name,Artist Name(s),Release Date,Duration (ms),Popularity,Explicit,Added By,Added At,Genres,Record Label,Danceability,Energy,Key,Loudness,Mode,Speechiness,Acousticness,Instrumentalness,Liveness,Valence,Tempo,Time Signature
+spotify:track:3ajbqS54UTMweMp1x24DFN,"Atom Bomb","Risotto","Fluke",1997-01-01,345234,44,true,5forty,2012-11-23T02:40:36Z,"big beat,breakbeat","Circa",0.5,0.915,1,-8.777,0,0.0483,0.00142,0.379,0.119,0.348,110.011,4
+spotify:track:5C7rx6gH1kKZqDUxEI6n4l,"Absurd","Risotto","Fluke",1997-01-01,348826,38,false,5forty,2012-11-23T02:40:36Z,"big beat,breakbeat","Circa",0.543,0.96,11,-8.666,0,0.0479,0.00118,0.481,0.606,0.422,125.047,4
+spotify:track:0cDrYiLOotWQb09XTc9KD0,"Bullet","Oto","Fluke",1995-01-01,539600,31,false,5forty,2012-11-23T02:40:36Z,"big beat,breakbeat","Circa",0.582,0.716,10,-11.464,0,0.0334,0.00983,0.85,0.128,0.458,125.016,4
+spotify:track:5YjpwbO5T5x0bsRWL1qyWX,"Switch / Twitch","Puppy","Fluke",2003-03-21,573280,0,false,5forty,2012-11-23T02:40:36Z,"big beat,breakbeat","One Little Indian Records",0.311,0.906,6,-9.189,1,0.0394,0.000153,0.808,0.0884,0.53,113.252,4
+spotify:track:1LTpP91r1O0kLXPxLkRumV,"Snapshot","Puppy","Fluke",2003-03-21,249000,0,false,5forty,2012-11-23T02:40:36Z,"big beat,breakbeat","One Little Indian Records",0.518,0.878,1,-8.82,0,0.0469,0.000127,0.0268,0.131,0.307,127.058,4
