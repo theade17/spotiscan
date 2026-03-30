@@ -214,6 +214,7 @@ async def search_songs(
     statement = statement.order_by(Song.title).offset(offset).limit(limit)
     
     results = session.exec(statement).all()
+    print(f"DEBUG: Found {len(results)} results for query '{query_str}' (mode={mode}, user_id={user_id})")
     
     return [
         {
