@@ -188,10 +188,8 @@ async def search_songs(
     
     # Filter by guest vs logged-in user
     if user_id:
-        # Logged-in users ONLY see their own songs (starts empty)
-        statement = statement.where(Song.user_id == user_id)
+        statement = statement.where(or_(Song.user_id == user_id, Song.user_id == None))
     else:
-        # Guest users ONLY see legacy songs
         statement = statement.where(Song.user_id == None)
     
     # Handle Inclusions
