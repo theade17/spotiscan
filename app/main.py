@@ -216,8 +216,8 @@ async def search_songs(
     results = session.exec(statement).all()
     # Exhaustive search to find any "hidden" results
     all_raw = session.exec(select(Song).where(Song.title.ilike(f"%{query_str}%"))).all()
-    print(f"DEBUG: ALL moped songs: {[(s.title, s.user_id, s.source_id) for s in all_raw]}")
-    print(f"DEBUG: Found {len(results)} results for query '{query_str}' (DB: {engine.url.host}, user_id={user_id})")
+    print(f"DEBUG: ALL matching songs: {[(s.title, s.user_id, s.source_id) for s in all_raw]}")
+    print(f"DEBUG: Search: {query_str} | Found: {len(results)} | DB: {engine.url.database} on {engine.url.host} | User: {user_id}")
     
     return [
         {
