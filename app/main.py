@@ -37,7 +37,7 @@ async def favicon():
 
 @app.get("/", response_class=HTMLResponse)
 async def read_root(request: Request):
-    return templates.TemplateResponse("index.html", {"request": request})
+    return templates.TemplateResponse(request=request, name="index.html")
 
 @app.get("/api/me")
 async def get_me(request: Request, session: Session = Depends(get_session)):
